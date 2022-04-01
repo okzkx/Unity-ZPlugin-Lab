@@ -1,0 +1,3 @@
+[submodule "Packages/com.okzkx.zplugin.core"]
+	path = Packages/com.okzkx.zplugin.core
+	url = https://github.com/okzkx/Unity-ZPlugin-Core.git
