@@ -1,5 +1,11 @@
 # ZPlugin 效果测试
 
+该工程是 ZPlugin 的测试工程，可以在这个工程里看到 ZPlugin 的使用效果
+
+用户也可以直接导入 ZPlugin 插件
+
+## 导入方式
+
 导入插件到 Package Manager 方式：
 
 在 PackageManager 中使用 `Add package from git URL`
