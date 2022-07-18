@@ -1,4 +1,4 @@
-# ZPlugin 效果测试
+﻿# ZPlugin 效果测试
 
 该工程是 ZPlugin 的测试工程，可以在这个工程里看到 ZPlugin 的使用效果
 
@@ -32,6 +32,10 @@ git 地址：
 
 OnGui 显示提示文字
 
-### 5. Timer
+### 5. Resizable
+
+UGUI拖拽边界
+
+### 6. Timer
 
 计时器
