@@ -37,7 +37,7 @@ Shader "Custom/OldSchoolPro" {
         Pass {
             Name "Outline"
             Tags {
-                "LightMode" = "ForwardOnly"
+                "LightMode" = "UniversalForwardOnly"
             }
 
             Cull Front
@@ -46,9 +46,9 @@ Shader "Custom/OldSchoolPro" {
             #pragma vertex Vert
             #pragma fragment Frag
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
-
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            
             CBUFFER_START(UnityPerMaterial)
 
             uniform float4 _OutlineColor;
@@ -85,7 +85,7 @@ Shader "Custom/OldSchoolPro" {
         Pass {
             Name "Character"
             Tags {
-                "LightMode" = "Forward"
+                "LightMode" = "UniversalForward"
             }
             HLSLPROGRAM
             #pragma vertex Vert
@@ -95,10 +95,8 @@ Shader "Custom/OldSchoolPro" {
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT//柔化阴影，得到软阴影
 
-
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
-            #include "../ShaderLibrary/CustomLight.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
 
@@ -190,8 +188,8 @@ Shader "Custom/OldSchoolPro" {
                 float3 normalWS = normalize(mul(normalTS, tangentToWorldMatrix));
                 float3 viewWS = normalize(_WorldSpaceCameraPos.xyz - input.positionWS.xyz);
                 float3 viewReflectWS = reflect(-viewWS, normalWS);
-                SimpleLight mylight = GetSimpleLight();
-                float3 lightWS = mylight.directionWS;
+                Light mylight = GetMainLight();
+                float3 lightWS = mylight.direction;
                 float3 lightReflectWS = reflect(-lightWS, normalWS);
 
                 // 准备点积结果
