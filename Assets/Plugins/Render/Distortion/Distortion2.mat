@@ -1,0 +1,252 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Distortion2
+  m_Shader: {fileID: 4800000, guid: e07f7ca81d1551140a451cee0e30ac57, type: 3}
+  m_ShaderKeywords: _ADDTEXBLENDMODE_LERP _DISSOLVEAR_ON _SCREENAR_ON _SCREENMASKAR_ON
+    _VTOAR_ON _VTOMASKAR_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AddTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 34ae3112eee42564ea32781c7fbafea9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissloveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DistortTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: e515da3c04ac44b488716320da652a2c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenDistortMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenDistortTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture:
+        m_Texture: {fileID: 2800000, guid: 34ae3112eee42564ea32781c7fbafea9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VTOMaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VTOTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _tex4coord2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _tex4coord3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AddTexAlpha: 0
+    - _AddTexBlend: 0
+    - _AddTexBlendMode: 0
+    - _AddTexC: 0
+    - _AddTexCV: 0
+    - _AddTexChanel: 0
+    - _AddTexLerp: 0
+    - _AddTexRo: 0
+    - _AddTexUspeed: 0
+    - _AddTexVspeed: 0
+    - _AlphaAdd: 0
+    - _BumpScale: 1
+    - _Cullmode: 0
+    - _CustomDistort: 0
+    - _CustomdataDis: 0
+    - _CustomdataMainTexUV: 0
+    - _CustomdataMaskUV: 0
+    - _CustomdataScreenUV: 0
+    - _Cutoff: 0.5
+    - _DIssloveFactor: 0.5077091
+    - _DIssloveSoft: 0.8235294
+    - _DIssloveWide: 0.02352943
+    - _DIssolve_rotat: 0
+    - _DepthF: 0
+    - _DepthfadeFactor: 1
+    - _Depthfadeon: 0
+    - _DetailNormalMapScale: 1
+    - _DisTex_Uspeed: 0
+    - _DisTex_Vspeed: 0
+    - _DissolveAR: 1
+    - _DissolveC: 0
+    - _DissolveCV: 0
+    - _DistortAddTex: 1
+    - _DistortDisTex: 0
+    - _DistortFactor: 0
+    - _DistortMainTex: 1
+    - _DistortMask: 0
+    - _DistortTex_Uspeed: 0
+    - _DistortTex_Vspeed: 0
+    - _Distortion: 0.07
+    - _DistortionScale: 0.07
+    - _Dst: 10
+    - _DstBlend: 0
+    - _FNLfanxiangkaiguan: 0
+    - _FNLkaiguan: 0
+    - _Float0: 0.1
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Half0: 0.07
+    - _HeatForce: 0.0071
+    - _HeatTime: 1.029
+    - _IfAddTex: 0
+    - _IfMaskColor: 0
+    - _MainAlpha: 1.4
+    - _MainAlphaPower: 1
+    - _MainTex_Uspeed: 0
+    - _MainTex_Vspeed: 0
+    - _MainTex_ar: 0
+    - _MainTex_rotat: 0
+    - _MaintexC: 0
+    - _MaintexCV: 0
+    - _MaskAlphaRA: 0
+    - _MaskC: 0
+    - _MaskCV: 0
+    - _Mask_Uspeed: 0
+    - _Mask_Vspeed: 0
+    - _Mask_rotat: 0
+    - _Mask_scale: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Scr: 5
+    - _ScreenAR: 1
+    - _ScreenC: 0
+    - _ScreenCV: 0
+    - _ScreenDistortTexScale: 0
+    - _ScreenMaskAR: 1
+    - _ScreenMaskC: 0
+    - _ScreenMaskCV: 0
+    - _ScreenMaskR: 0
+    - _ScreenR: 0
+    - _ScreenU: 0
+    - _ScreenV: 0
+    - _Screencoloron: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _ToggleSwitch0: 0
+    - _UVSec: 0
+    - _VTOAR: 1
+    - _VTOC: 0
+    - _VTOCV: 0
+    - _VTOFactor: 0
+    - _VTOMaskAR: 1
+    - _VTOMaskC: 0
+    - _VTOMaskCV: 0
+    - _VTOMaskR: 0
+    - _VTOR: 0
+    - _VTOTex_Uspeed: 0
+    - _VTOTex_Vspeed: 0
+    - _ZWrite: 1
+    - _Ztest: 4
+    - _Zwrite: 0
+    - __dirty: 1
+    - _fnl_power: 1
+    - _fnl_sacle: 0
+    - _qubaohedu: 0
+    - _screenVTOon: 0
+    - _screenalphaon: 0
+    - _softFacotr: 0
+    - _soft_sting: 0
+    - _sot_sting_A: 0
+    m_Colors:
+    - _AddTexColor: {r: 0, g: 0, b: 0, a: 0}
+    - _BackFaceColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DIssloveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DepthColor: {r: 0, g: 0, b: 0, a: 0}
+    - _Dir: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MainColor: {r: 1.4980392, g: 0.3372549, b: 0.3372549, a: 1}
+    - _fnl_color: {r: 1, g: 1, b: 1, a: 0}
+  m_BuildTextureStacks: []
