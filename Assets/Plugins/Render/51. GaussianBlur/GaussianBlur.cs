@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-[Serializable, VolumeComponentMenuForRenderPipeline("Post-processing/GaussianBlur", typeof(UniversalRenderPipeline))]
+[Serializable, VolumeComponentMenuForRenderPipeline("ZPlugin/GaussianBlur", typeof(UniversalRenderPipeline))]
 public sealed class GaussianBlur : VolumeComponent, IPostProcessComponent {
-    public ClampedFloatParameter intensity = new ClampedFloatParameter(0.5f, 0f, 1f);
+    public ClampedFloatParameter intensity = new ClampedFloatParameter(0.0f, 0f, 1f);
 
     public ClampedIntParameter blitCount = new ClampedIntParameter(3, 0, 8);
 
@@ -51,12 +51,12 @@ public class GaussianBlurPass : ScriptableRenderPass {
         if (m_Material == null) {
             return;
         }
-
-        var stack = VolumeManager.instance.stack;
-        GaussianBlur = stack.GetComponent<GaussianBlur>();
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+
+        var stack = VolumeManager.instance.stack;
+        GaussianBlur = stack.GetComponent<GaussianBlur>();
         if (!GaussianBlur.IsActive()) {
             return;
         }

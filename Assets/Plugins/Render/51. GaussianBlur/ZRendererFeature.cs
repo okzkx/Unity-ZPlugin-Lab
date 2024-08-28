@@ -11,11 +11,13 @@ public class ZRenderFeature : ScriptableRendererFeature {
     private Shader m_Shader;
 
     private GaussianBlurPass GaussianBlurPass;
+    private OutlinePass OutlinePass;
 
     public override void Create() {
         // m_Shader = Shader.Find();
         // Debug.Log(Shader.Find("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion"));
         GaussianBlurPass = new GaussianBlurPass();
+        OutlinePass = new OutlinePass();
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
@@ -35,11 +37,14 @@ public class ZRenderFeature : ScriptableRendererFeature {
         }
         
         GaussianBlurPass.Setup(m_Shader,renderer);
+        OutlinePass.Setup(renderer);
         
         renderer.EnqueuePass(GaussianBlurPass);
+        renderer.EnqueuePass(OutlinePass);
     }
 
     private void OnDisable() {
         GaussianBlurPass?.Dispose();
+        OutlinePass?.Cleanup();
     }
 }
