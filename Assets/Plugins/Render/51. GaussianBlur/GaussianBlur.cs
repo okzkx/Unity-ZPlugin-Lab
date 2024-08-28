@@ -1,92 +1,91 @@
-// using UnityEngine;
-// using UnityEngine.Rendering.HighDefinition;
-// using UnityEngine.Rendering;
-// using UnityEngine.Experimental.Rendering;
-// using UnityEngine.Rendering.Universal;
-//
-// public class GaussianBlur : ScriptableRenderPass {
-//     
-//     // Specifies the radius for the blur in pixels. This example uses an 8 pixel radius.
-//     public float blurFactor = 8.0f;
-//
-//     // Specifies the precision of the blur. This also affects the resource intensity of the blue. A value of 9 is good for real-time applications.
-//     const int sampleCount = 9;
-//
-//     RTHandle halfResTarget;
-//
-//     public override void Setup(ScriptableRenderContext context, ref RenderingData renderingData) {
-//         halfResTarget = RTHandles.Alloc(
-//             // Note the * 0.5f here. This allocates a half-resolution target, which saves a lot of memory.
-//             Vector2.one * 0.5f, TextureXR.slices, dimension: TextureXR.dimension,
-//             // Since alpha is unnecessary for Gaussian blur, this effect uses an HDR texture format with no alpha channel.
-//             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32,
-//             // When creating textures, be sure to name them as it is useful for debugging.
-//             useDynamicScale: true, name: "Half Res Custom Pass"
-//         );
-//         
-//     }
-//     
-//     
-//     
-//     public override void Execute(ScriptableRenderContext ctx, ref RenderingData renderingData) {
-//         float radius = blurFactor;
-//     
-//         // In cases where you have multiple cameras with different resolutions, this makes the blur coherent across these cameras.
-//         radius *= ctx.cameraColorBuffer.rtHandleProperties.rtHandleScale.x;
-//     
-//         // The actual Gaussian blur call. It specifies the current camera's color buffer as the source and destination.
-//         // This uses the half-resolution target as a temporary render target between the blur passes.
-//         // Note that the Gaussian blur function clears the content of the half-resolution buffer when it finishes.
-//         CustomPassUtils.GaussianBlur(
-//             ctx, ctx.cameraColorBuffer, ctx.cameraColorBuffer, halfResTarget,
-//             sampleCount, radius, downSample: true
-//         );
-//     // }
-//
-//     // Releases the GPU memory allocated for the half-resolution target. This is important otherwise the memory will leak.
-//     protected override void Cleanup() => halfResTarget.Release();
-//
-//     public GaussianBlur(ScriptableRendererData data) : base(data) {
-//     }
-// }
-
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 [Serializable, VolumeComponentMenuForRenderPipeline("Post-processing/GaussianBlur", typeof(UniversalRenderPipeline))]
-public sealed partial class GaussianBlur : VolumeComponent, IPostProcessComponent {
-    /// <summary>
-    /// Controls the strength of the bloom filter.
-    /// </summary>
-    [Tooltip("Strength of the bloom filter.")]
-    public MinFloatParameter intensity = new MinFloatParameter(0f, 0f);
-    
+public sealed class GaussianBlur : VolumeComponent, IPostProcessComponent {
+    public ClampedFloatParameter intensity = new ClampedFloatParameter(0.5f, 0f, 1f);
+
+    public ClampedIntParameter blitCount = new ClampedIntParameter(3, 0, 8);
+
     public bool IsActive() => intensity.value > 0f;
 
-    /// <inheritdoc/>
     public bool IsTileCompatible() => false;
+}
+
+enum ZPluginProfileId {
+    GaussianBlur
 }
 
 public class GaussianBlurPass : ScriptableRenderPass {
     private GaussianBlur GaussianBlur;
+    private RTHandle[] m_SSAOTextures = new RTHandle[4];
+    private Material m_Material;
+    private ProfilingSampler m_ProfilingSampler = ProfilingSampler.Get(ZPluginProfileId.GaussianBlur);
+    private ScriptableRenderer renderer;
 
-    public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+    public GaussianBlurPass() {
+        renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
+    }
+
+    public void Setup(Shader m_Shader, ScriptableRenderer renderer) {
+        if (m_Material == null && m_Shader != null)
+            m_Material = CoreUtils.CreateEngineMaterial(m_Shader);
+        this.renderer = renderer;
+    }
+
+    private static readonly int s_SSAOParamsID = Shader.PropertyToID("_SSAOParams");
+
+    public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) {
+        RenderTextureDescriptor cameraTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
+        RenderTextureDescriptor descriptor = cameraTargetDescriptor;
+        descriptor.msaaSamples = 1;
+        descriptor.depthBufferBits = 0;
+
+        var m_AOPassDescriptor = descriptor;
+
+        RenderingUtils.ReAllocateIfNeeded(ref m_SSAOTextures[0], m_AOPassDescriptor, FilterMode.Bilinear, TextureWrapMode.Clamp, name: "_SSAO_OcclusionTexture0");
+        RenderingUtils.ReAllocateIfNeeded(ref m_SSAOTextures[1], m_AOPassDescriptor, FilterMode.Bilinear, TextureWrapMode.Clamp, name: "_SSAO_OcclusionTexture1");
+
+        if (m_Material == null) {
+            return;
+        }
+
         var stack = VolumeManager.instance.stack;
         GaussianBlur = stack.GetComponent<GaussianBlur>();
-        
-    }
-}
-
-public class ZRenderFeature : ScriptableRendererFeature {
-    private GaussianBlurPass GaussianBlurPass;
-    
-    public override void Create() {
-        GaussianBlurPass = new GaussianBlurPass();
     }
 
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
-        renderer.EnqueuePass(GaussianBlurPass);
+    public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+        if (!GaussianBlur.IsActive()) {
+            return;
+        }
+
+        var intensity = Mathf.Lerp(0.6f, 0.15f, GaussianBlur.intensity.value);
+        // m_Material.SetVector(s_SSAOParamsID, new Vector4(
+        //     1, // m_CurrentSettings.Intensity,    // Intensity
+        //     0.035f, // m_CurrentSettings.Radius * 1.5f,// Radius
+        //     intensity, // 1.0f / downsampleDivider,       // Downsampling
+        //     0f // m_CurrentSettings.Falloff       // Falloff
+        // ));
+        m_Material.SetVector(s_SSAOParamsID, new Vector4(0,0, intensity, 0));
+
+        CommandBuffer cmd = CommandBufferPool.Get();
+        using (new ProfilingScope(cmd, m_ProfilingSampler)) {
+            var baseMap = renderer.cameraColorTargetHandle;
+            var target = m_SSAOTextures[0];
+            for (int i = 0; i < GaussianBlur.blitCount.value; i++) {
+                Blitter.BlitCameraTexture(cmd, baseMap, target, m_Material, 1);
+                Blitter.BlitCameraTexture(cmd, target, baseMap, m_Material, 2);
+            }
+        }
+
+        context.ExecuteCommandBuffer(cmd);
+        CommandBufferPool.Release(cmd);
+    }
+
+    public void Dispose() {
+        m_SSAOTextures[0]?.Release();
+        m_SSAOTextures[1]?.Release();
     }
 }
