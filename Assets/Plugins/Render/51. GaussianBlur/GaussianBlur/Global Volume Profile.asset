@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   blitCount:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

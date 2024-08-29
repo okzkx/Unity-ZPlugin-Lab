@@ -29,9 +29,9 @@ public class GaussianBlurPass : ScriptableRenderPass {
         renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
     }
 
-    public void Setup(Shader m_Shader, ScriptableRenderer renderer) {
+    public void Setup(ScriptableRenderer renderer) {
         if (m_Material == null) {
-            m_Shader = Shader.Find("ZPlugin/GaussianBlurShader");
+            var m_Shader = Shader.Find("ZPlugin/GaussianBlurShader");
             m_Material = CoreUtils.CreateEngineMaterial(m_Shader);
         }
 

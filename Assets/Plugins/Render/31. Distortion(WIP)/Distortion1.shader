@@ -24,8 +24,7 @@ Shader "C1/Distortion1" {
             #pragma vertex Vertex
             #pragma fragment Fragment
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attribute
             {

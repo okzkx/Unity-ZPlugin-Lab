@@ -21,10 +21,7 @@ Shader "C1/Distortion2" {
             #pragma vertex Vertex
             #pragma fragment Fragment
 
-            // HDRP Library
-
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
