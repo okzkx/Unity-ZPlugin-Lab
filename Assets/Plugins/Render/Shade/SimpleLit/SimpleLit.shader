@@ -1,4 +1,4 @@
-Shader "Custom/SimpleLit"
+Shader "ZPlugin/SimpleLit"
 {
     Properties
     {
