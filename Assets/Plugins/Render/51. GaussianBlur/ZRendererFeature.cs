@@ -7,7 +7,7 @@ public class ZRenderFeature : ScriptableRendererFeature {
     [SerializeField] 
     // [HideInInspector]
     // [Reload("Packages/com.unity.render-pipelines.universal/Shaders/Utils/ScreenSpaceAmbientOcclusion.shader")]
-    [Reload("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion")]
+    [Reload("Assets/Plugins/Render/51. GaussianBlur/GaussianBlurShader.shader")]
     private Shader m_Shader;
 
     private GaussianBlurPass GaussianBlurPass;

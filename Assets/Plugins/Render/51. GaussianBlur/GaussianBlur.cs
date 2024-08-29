@@ -30,8 +30,11 @@ public class GaussianBlurPass : ScriptableRenderPass {
     }
 
     public void Setup(Shader m_Shader, ScriptableRenderer renderer) {
-        if (m_Material == null && m_Shader != null)
+        if (m_Material == null) {
+            m_Shader = Shader.Find("ZPlugin/GaussianBlurShader");
             m_Material = CoreUtils.CreateEngineMaterial(m_Shader);
+        }
+
         this.renderer = renderer;
     }
 
@@ -54,7 +57,6 @@ public class GaussianBlurPass : ScriptableRenderPass {
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
-
         var stack = VolumeManager.instance.stack;
         GaussianBlur = stack.GetComponent<GaussianBlur>();
         if (!GaussianBlur.IsActive()) {
@@ -68,15 +70,15 @@ public class GaussianBlurPass : ScriptableRenderPass {
         //     intensity, // 1.0f / downsampleDivider,       // Downsampling
         //     0f // m_CurrentSettings.Falloff       // Falloff
         // ));
-        m_Material.SetVector(s_SSAOParamsID, new Vector4(0,0, intensity, 0));
+        m_Material.SetVector(s_SSAOParamsID, new Vector4(0, 0, intensity, 0));
 
         CommandBuffer cmd = CommandBufferPool.Get();
         using (new ProfilingScope(cmd, m_ProfilingSampler)) {
             var baseMap = renderer.cameraColorTargetHandle;
             var target = m_SSAOTextures[0];
             for (int i = 0; i < GaussianBlur.blitCount.value; i++) {
-                Blitter.BlitCameraTexture(cmd, baseMap, target, m_Material, 1);
-                Blitter.BlitCameraTexture(cmd, target, baseMap, m_Material, 2);
+                Blitter.BlitCameraTexture(cmd, baseMap, target, m_Material, 0);
+                Blitter.BlitCameraTexture(cmd, target, baseMap, m_Material, 1);
             }
         }
 
