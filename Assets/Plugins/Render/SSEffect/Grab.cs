@@ -20,15 +20,7 @@ public class GrabPass : SSPass<Grab> {
     }
 
     protected override void SSExecute(ref CustomPassContext ctx, Grab gaussianBlur, ref RenderingData renderingData) {
-        Shader.SetGlobalTexture(_GrabPassTexture, buffer);
+        Shader.SetGlobalTexture(_GrabPassTexture, buffer); // TODO : Temp rt
         Blitter.BlitCameraTexture(ctx. cmd, renderer.cameraColorTargetHandle, buffer);
-    }
-
-    public new void SetUp(ScriptableRenderer scriptableRenderer) {
-        base.Setup(scriptableRenderer);
-    }
-
-    public new void Release() {
-        base.Release();
     }
 }

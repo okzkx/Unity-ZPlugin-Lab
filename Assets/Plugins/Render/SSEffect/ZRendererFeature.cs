@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -15,13 +16,24 @@ public class ZRenderFeature : ScriptableRendererFeature {
     private GrabPass grabPass;
     private PostEffectPass PostEffectPass;
 
+    private List<ScriptableRenderPass> passes;
+    private List<SSPass> sspPassList;
+
     public override void Create() {
         // m_Shader = Shader.Find();
         // Debug.Log(Shader.Find("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion"));
-        GaussianBlurPass = new GaussianBlurPass();
-        OutlinePass = new OutlinePass();
-        grabPass = new GrabPass();
-        PostEffectPass = new PostEffectPass();
+        // GaussianBlurPass = new GaussianBlurPass();
+        // OutlinePass = new OutlinePass();
+        // grabPass = new GrabPass();
+        // PostEffectPass = new PostEffectPass();
+        passes = new List<ScriptableRenderPass>() {
+            new PostEffectPass()
+        };
+        sspPassList = new List<SSPass>() {
+            new GaussianBlurPass(),
+            new OutlinePass(),
+            new GrabPass(),
+        };
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
@@ -40,19 +52,25 @@ public class ZRenderFeature : ScriptableRendererFeature {
         //     m_Shader = Shader.Find("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion");
         // }
 
-        GaussianBlurPass.Setup(renderer);
-        OutlinePass.Setup(renderer);
-        grabPass.SetUp(renderer);
+        // GaussianBlurPass.Setup(renderer);
+        // OutlinePass.Setup(renderer);
+        // grabPass.SetUp(renderer);
+        
+        sspPassList.ForEach(s=>s.Setup(renderer));
+        passes.ForEach(renderer.EnqueuePass);
+        sspPassList.ForEach(renderer.EnqueuePass);
 
-        renderer.EnqueuePass(GaussianBlurPass);
-        renderer.EnqueuePass(OutlinePass);
-        renderer.EnqueuePass(grabPass);
-        renderer.EnqueuePass(PostEffectPass);
+        // renderer.EnqueuePass(GaussianBlurPass);
+        // renderer.EnqueuePass(OutlinePass);
+        // renderer.EnqueuePass(grabPass);
+        // renderer.EnqueuePass(PostEffectPass);
     }
 
     private void OnDisable() {
-        GaussianBlurPass?.Release();
-        OutlinePass?.Release();
-        grabPass?.Release();
+        sspPassList.ForEach(s=>s.Release());
+
+        // GaussianBlurPass?.Release();
+        // OutlinePass?.Release();
+        // grabPass?.Release();
     }
 }

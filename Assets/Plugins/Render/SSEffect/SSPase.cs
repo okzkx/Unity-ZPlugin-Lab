@@ -2,12 +2,22 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public abstract class SSPass<VolumeComp> : ScriptableRenderPass
+public abstract class SSPass : ScriptableRenderPass {
+    protected ScriptableRenderer renderer;
+
+    public void Setup(ScriptableRenderer renderer) {
+        this.renderer = renderer;
+    }
+
+    public virtual void Release() {
+    }
+}
+
+public abstract class SSPass<VolumeComp> : SSPass
     where VolumeComp : VolumeComponent, IPostProcessComponent {
     protected RTHandle buffer;
     private Material m_Material;
     protected ProfilingSampler m_ProfilingSampler;
-    protected ScriptableRenderer renderer;
     public string shaderName;
     public string name;
     private MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
@@ -28,10 +38,6 @@ public abstract class SSPass<VolumeComp> : ScriptableRenderPass
         this.shaderName = shaderName;
         m_ProfilingSampler = new ProfilingSampler(name);
         this.renderPassEvent = renderPassEvent;
-    }
-
-    public void Setup(ScriptableRenderer renderer) {
-        this.renderer = renderer;
     }
 
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) {
@@ -73,7 +79,7 @@ public abstract class SSPass<VolumeComp> : ScriptableRenderPass
     protected abstract void SSExecute(ref CustomPassContext ctx, VolumeComp gaussianBlur,
         ref RenderingData renderingData);
 
-    public void Release() {
+    public override void Release() {
         buffer?.Release();
     }
 }
