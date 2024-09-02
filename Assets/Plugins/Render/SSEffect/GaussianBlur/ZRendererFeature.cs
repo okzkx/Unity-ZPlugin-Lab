@@ -51,8 +51,8 @@ public class ZRenderFeature : ScriptableRendererFeature {
     }
 
     private void OnDisable() {
-        GaussianBlurPass?.Dispose();
-        OutlinePass?.Cleanup();
+        GaussianBlurPass?.Release();
+        OutlinePass?.Release();
         GrabPass?.Cleanup();
     }
 }

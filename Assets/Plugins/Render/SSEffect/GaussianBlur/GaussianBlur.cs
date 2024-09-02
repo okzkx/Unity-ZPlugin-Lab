@@ -22,6 +22,7 @@ public abstract class SSPass<VolumeComp> : ScriptableRenderPass
     protected ScriptableRenderer renderer;
     public string shaderName;
     public string name;
+    private MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
 
     protected SSPass(string name, string shaderName, RenderPassEvent renderPassEvent) {
         this.name = shaderName;
@@ -53,24 +54,32 @@ public abstract class SSPass<VolumeComp> : ScriptableRenderPass
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
         var stack = VolumeManager.instance.stack;
-        VolumeComp GaussianBlur = stack.GetComponent<VolumeComp>();
-        if (!GaussianBlur.IsActive()) {
+        VolumeComp volumeComp = stack.GetComponent<VolumeComp>();
+        if (!volumeComp.IsActive()) {
             return;
         }
 
         CommandBuffer cmd = CommandBufferPool.Get();
 
+        CustomPassContext ctx = new CustomPassContext() {
+            cmd = cmd,
+            context = context,
+            propertyBlock = propertyBlock,
+            cameraColorBuffer = renderer.cameraColorTargetHandle,
+        };
+
         using (new ProfilingScope(cmd, m_ProfilingSampler)) {
-            SSExecute(cmd, GaussianBlur);
+            SSExecute(ref ctx, volumeComp, ref renderingData);
         }
 
         context.ExecuteCommandBuffer(cmd);
         CommandBufferPool.Release(cmd);
     }
 
-    protected abstract void SSExecute(CommandBuffer cmd, VolumeComp gaussianBlur);
+    protected abstract void SSExecute(ref CustomPassContext ctx, VolumeComp gaussianBlur,
+        ref RenderingData renderingData);
 
-    public void Dispose() {
+    public void Release() {
         buffer?.Release();
     }
 }
@@ -82,13 +91,14 @@ public class GaussianBlurPass : SSPass<GaussianBlur> {
         RenderPassEvent.AfterRenderingSkybox) {
     }
 
-    protected override void SSExecute(CommandBuffer cmd, GaussianBlur gaussianBlur) {
+    protected override void SSExecute(ref CustomPassContext ctx, GaussianBlur gaussianBlur, 
+        ref RenderingData renderingData) {
         var intensity = Mathf.Lerp(0.6f, 0.15f, gaussianBlur.intensity.value);
         m_Material.SetVector(s_SSAOParamsID, new Vector4(0, 0, intensity, 0));
         var baseMap = renderer.cameraColorTargetHandle;
         for (int i = 0; i < gaussianBlur.blitCount.value; i++) {
-            Blitter.BlitCameraTexture(cmd, baseMap, buffer, m_Material, 0);
-            Blitter.BlitCameraTexture(cmd, buffer, baseMap, m_Material, 1);
+            Blitter.BlitCameraTexture(ctx.cmd, baseMap, buffer, m_Material, 0);
+            Blitter.BlitCameraTexture(ctx.cmd, buffer, baseMap, m_Material, 1);
         }
     }
 }
