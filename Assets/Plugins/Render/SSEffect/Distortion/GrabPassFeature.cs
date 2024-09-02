@@ -1,6 +1,21 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+
+
+[Serializable, VolumeComponentMenuForRenderPipeline("ZPlugin/Grab", typeof(UniversalRenderPipeline))]
+public sealed class Grab : VolumeComponent, IPostProcessComponent {
+    // public ClampedFloatParameter intensity = new ClampedFloatParameter(0.0f, 0f, 1f);
+    //
+    // public ClampedIntParameter blitCount = new ClampedIntParameter(3, 0, 8);
+    
+    public BoolParameter open = new BoolParameter(false);
+
+    public bool IsActive() => open.value;
+
+    public bool IsTileCompatible() => false;
+}
 
 public class GrabPass : ScriptableRenderPass {
     static readonly string k_RenderTag = "GrabPass"; //可在framedebug中看渲染
@@ -45,7 +60,14 @@ public class GrabPass : ScriptableRenderPass {
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
         // return;
+        var stack = VolumeManager.instance.stack;
+        Grab Grab = stack.GetComponent<Grab>();
+        if (!Grab.IsActive()) {
+            return;
+        }
 
+        Debug.Log("VAR");
+        
         var cmd = CommandBufferPool.Get(k_RenderTag);
 
         // cmd.GetTemporaryRT(tempColorTarget.nameID, Screen.width, Screen.height); //获取临时rt

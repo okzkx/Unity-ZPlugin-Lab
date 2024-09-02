@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class ZRenderFeature : ScriptableRendererFeature {
-    [SerializeField] 
+    [SerializeField]
     // [HideInInspector]
     // [Reload("Packages/com.unity.render-pipelines.universal/Shaders/Utils/ScreenSpaceAmbientOcclusion.shader")]
     [Reload("Assets/Plugins/Render/51. GaussianBlur/GaussianBlurShader.shader")]
@@ -39,11 +39,11 @@ public class ZRenderFeature : ScriptableRendererFeature {
         // if (m_Shader == null) {
         //     m_Shader = Shader.Find("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion");
         // }
-        
+
         GaussianBlurPass.Setup(renderer);
         OutlinePass.Setup(renderer);
         GrabPass.SetUp(renderer);
-        
+
         renderer.EnqueuePass(GaussianBlurPass);
         renderer.EnqueuePass(OutlinePass);
         renderer.EnqueuePass(GrabPass);
