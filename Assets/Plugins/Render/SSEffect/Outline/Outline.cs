@@ -49,7 +49,7 @@ public class OutlinePass : SSPass<Outline> {
 
         // Render the outline as a fullscreen alpha-blended pass on top of the camera color
         CoreUtils.SetRenderTarget(ctx.cmd, ctx.cameraColorBuffer, ClearFlag.None);
-        CoreUtils.DrawFullScreen(ctx.cmd, m_Material, ctx.propertyBlock, shaderPassId: 0);
+        CoreUtils.DrawFullScreen(ctx.cmd, Material, ctx.propertyBlock, shaderPassId: 0);
 
     }
 }

@@ -12,7 +12,7 @@ public class ZRenderFeature : ScriptableRendererFeature {
 
     private GaussianBlurPass GaussianBlurPass;
     private OutlinePass OutlinePass;
-    private GrabPass GrabPass;
+    private GrabPass grabPass;
     private PostEffectPass PostEffectPass;
 
     public override void Create() {
@@ -20,7 +20,7 @@ public class ZRenderFeature : ScriptableRendererFeature {
         // Debug.Log(Shader.Find("Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion"));
         GaussianBlurPass = new GaussianBlurPass();
         OutlinePass = new OutlinePass();
-        GrabPass = new GrabPass();
+        grabPass = new GrabPass();
         PostEffectPass = new PostEffectPass();
     }
 
@@ -42,17 +42,17 @@ public class ZRenderFeature : ScriptableRendererFeature {
 
         GaussianBlurPass.Setup(renderer);
         OutlinePass.Setup(renderer);
-        GrabPass.SetUp(renderer);
+        grabPass.SetUp(renderer);
 
         renderer.EnqueuePass(GaussianBlurPass);
         renderer.EnqueuePass(OutlinePass);
-        renderer.EnqueuePass(GrabPass);
+        renderer.EnqueuePass(grabPass);
         renderer.EnqueuePass(PostEffectPass);
     }
 
     private void OnDisable() {
         GaussianBlurPass?.Release();
         OutlinePass?.Release();
-        GrabPass?.Cleanup();
+        grabPass?.Release();
     }
 }
