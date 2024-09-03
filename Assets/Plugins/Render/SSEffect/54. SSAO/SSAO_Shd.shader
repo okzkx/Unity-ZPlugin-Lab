@@ -1,4 +1,4 @@
-Shader "Custom/SSAO" {
+Shader "ZPlugin/SSAO" {
     Properties {
         _LightIntensity("光照强度", Float) = 4
         [MainColor]_BaseColor("漫反射颜色",Color)=(1,1,1,1)
@@ -8,22 +8,8 @@ Shader "Custom/SSAO" {
     }
 
     HLSLINCLUDE
-    //-------------------------------------------------------------------------------------
-    // library include
-    //-------------------------------------------------------------------------------------
-
-    // HDRP Library
-
     #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-    #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
-
-    // Local library
-
-    #include "../ShaderLibrary/CustomLight.hlsl"
-
-    //-------------------------------------------------------------------------------------
-    // variable declaration
-    //-------------------------------------------------------------------------------------
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
     struct AttributesMesh
     {
@@ -42,9 +28,6 @@ Shader "Custom/SSAO" {
     ENDHLSL
 
     SubShader {
-        Tags {
-            "RenderPipeline"="HDRenderPipeline"
-        }
 
         // Prepare NormalBuffer for SSAO state to generate _AmbientOcclusionTexture
         Pass {
@@ -82,7 +65,7 @@ Shader "Custom/SSAO" {
         Pass {
             Name "FORWARD"
             Tags {
-                "LightMode"="ForwardOnly"
+                "LightMode"="UniversalForwardOnly"
             }
 
             HLSLPROGRAM
@@ -96,13 +79,15 @@ Shader "Custom/SSAO" {
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
-            CBUFFER_START(UnityPerMaterial)
+            TEXTURE2D_X_FLOAT(_AmbientOcclusionTexture);
+            SAMPLER(sampler_AmbientOcclusionTexture);
 
-            float _LightIntensity;
-            float4 _MainTex_ST;
-            float4 _BaseColor;
-            float _SpecularPow;
-            float4 _SpecularColor;
+            CBUFFER_START(UnityPerMaterial)
+                float _LightIntensity;
+                float4 _MainTex_ST;
+                float4 _BaseColor;
+                float _SpecularPow;
+                float4 _SpecularColor;
 
             CBUFFER_END
 
@@ -122,9 +107,9 @@ Shader "Custom/SSAO" {
 
             float4 Frag(VaryingsMeshToPS input): SV_Target0
             {
-                SimpleLight simpleLight = GetSimpleLight();
+                Light simpleLight = GetMainLight();
                 float4 positionSS = input.positionCS;
-                float3 lightWS = simpleLight.directionWS;
+                float3 lightWS = simpleLight.direction;
 
                 // L(Luminance) : Radiance input
                 float3 Li = simpleLight.color;
