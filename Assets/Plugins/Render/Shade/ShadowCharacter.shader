@@ -8,25 +8,10 @@ Shader "ZPlugin/Shadow" {
     }
 
     HLSLINCLUDE
-    //-------------------------------------------------------------------------------------
-    // library include
-    //-------------------------------------------------------------------------------------
 
-    // HDRP Library
-
-    // #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-    // #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
     #pragma shader_feature _MAIN_LIGHT_SHADOWS_CASCADE
-
-    // Local library
-
-    // #include "../ShaderLibrary/CustomLight.hlsl"
-
-    //-------------------------------------------------------------------------------------
-    // variable declaration
-    //-------------------------------------------------------------------------------------
 
     struct AttributesMesh
     {
@@ -99,7 +84,6 @@ Shader "ZPlugin/Shadow" {
                 float4 _BaseColor;
                 float _SpecularPow;
                 float4 _SpecularColor;
-
             CBUFFER_END
 
             //-------------------------------------------------------------------------------------
