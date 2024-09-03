@@ -2,7 +2,7 @@ Shader "ZPlugin/SimpleLit"
 {
     Properties
     {
-        _LightIntencity("光照强度", Float) = 4
+        _LightIntensity("光照强度", Float) = 4
         [KeywordEnum(Lambert, Half_Lambert)] _Diffuse("漫反射模型", Float) = 0
         [MainColor]_BaseColor("漫反射颜色",Color)=(1,1,1,1)
         [MainTexture]_MainTex("表面纹理",2D)="white"{}
@@ -74,7 +74,7 @@ Shader "ZPlugin/SimpleLit"
             SAMPLER(sampler_MainTex);
 
             CBUFFER_START(UnityPerMaterial)
-                float _LightIntencity;
+                float _LightIntensity;
                 float4 _MainTex_ST;
                 float4 _BaseColor;
                 float _SpecularPow;
@@ -107,7 +107,7 @@ Shader "ZPlugin/SimpleLit"
                 // L(Luminance) : Radiance input
                 float3 Li = light.color;
                 // E(Illuminance) : To simulate the Irradiance in BRDF
-                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntencity;
+                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntensity;
 
                 #if defined(_DIFFUSE_HALF_LAMBERT)
                     E = E * 0.5 + 0.5;

@@ -1,6 +1,6 @@
 Shader "ZPlugin/Shadow" {
     Properties {
-        _LightIntencity("光照强度", Float) = 4
+        _LightIntensity("光照强度", Float) = 4
         [MainColor]_BaseColor("漫反射颜色",Color)=(1,1,1,1)
         [MainTexture]_MainTex("表面纹理",2D)="white"{}
         _SpecularPow ("高光锐利度", Range(1,90)) =30
@@ -79,7 +79,7 @@ Shader "ZPlugin/Shadow" {
             SAMPLER(sampler_MainTex);
 
             CBUFFER_START(UnityPerMaterial)
-                float _LightIntencity;
+                float _LightIntensity;
                 float4 _MainTex_ST;
                 float4 _BaseColor;
                 float _SpecularPow;
@@ -113,7 +113,7 @@ Shader "ZPlugin/Shadow" {
                 float3 Li = simpleLight.color;
 
                 // E(Illuminance) : To simulate the Irradiance in BRDF
-                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntencity * simpleLight.shadowAttenuation;
+                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntensity * simpleLight.shadowAttenuation;
 
                 // Half Lambert
                 E = E * 0.5 + 0.5;
