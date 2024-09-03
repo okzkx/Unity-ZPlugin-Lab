@@ -134,7 +134,6 @@ Shader "ZPlugin/OutlineCharacter" {
             // TODO : Up grade CubeMap 
             samplerCUBE _Cubemap;
 
-
             struct AttributesMesh
             {
                 float3 positionOS : POSITION;
