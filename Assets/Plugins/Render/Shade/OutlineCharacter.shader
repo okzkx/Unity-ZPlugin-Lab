@@ -1,4 +1,4 @@
-Shader "ZPlugin/CharacterLit" {
+Shader "ZPlugin/OutlineCharacter" {
     Properties {
         [MainTexture] _MainTex ("RGB:基础颜色 A:环境遮罩", 2D) = "white" {}
         [NoScaleOffset][Normal] _NormTex ("RGB:法线贴图", 2D) = "bump" {}

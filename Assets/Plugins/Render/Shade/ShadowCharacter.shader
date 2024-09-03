@@ -1,4 +1,4 @@
-Shader "Custom/SSAO" {
+Shader "ZPlugin/Shadow" {
     Properties {
         _LightIntencity("光照强度", Float) = 4
         [MainColor]_BaseColor("漫反射颜色",Color)=(1,1,1,1)
@@ -14,12 +14,15 @@ Shader "Custom/SSAO" {
 
     // HDRP Library
 
-    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-    #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+    // #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+    // #include "Packages/com.unity.render-pipelines.high-definition/Runtime/ShaderLibrary/ShaderVariables.hlsl"
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+    #pragma shader_feature _MAIN_LIGHT_SHADOWS_CASCADE
 
     // Local library
 
-    #include "../ShaderLibrary/CustomLight.hlsl"
+    // #include "../ShaderLibrary/CustomLight.hlsl"
 
     //-------------------------------------------------------------------------------------
     // variable declaration
@@ -42,9 +45,6 @@ Shader "Custom/SSAO" {
     ENDHLSL
 
     SubShader {
-        Tags {
-            "RenderPipeline"="HDRenderPipeline"
-        }
 
         Pass {
             Name "ShadowCaster"
@@ -79,7 +79,7 @@ Shader "Custom/SSAO" {
         Pass {
             Name "FORWARD"
             Tags {
-                "LightMode"="ForwardOnly"
+                "LightMode"="UniversalForward"
             }
 
             HLSLPROGRAM
@@ -94,12 +94,11 @@ Shader "Custom/SSAO" {
             SAMPLER(sampler_MainTex);
 
             CBUFFER_START(UnityPerMaterial)
-
-            float _LightIntencity;
-            float4 _MainTex_ST;
-            float4 _BaseColor;
-            float _SpecularPow;
-            float4 _SpecularColor;
+                float _LightIntencity;
+                float4 _MainTex_ST;
+                float4 _BaseColor;
+                float _SpecularPow;
+                float4 _SpecularColor;
 
             CBUFFER_END
 
@@ -119,15 +118,18 @@ Shader "Custom/SSAO" {
 
             float4 Frag(VaryingsMeshToPS input): SV_Target0
             {
-                SimpleLight simpleLight = GetSimpleLight();
                 float4 positionSS = input.positionCS;
-                float3 lightWS = simpleLight.directionWS;
+                float4 shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                                // return shadowCoord;
+                Light simpleLight = GetMainLight(shadowCoord);
+                // return float4(simpleLight.distanceAttenuation,0,0,1);
+                float3 lightWS = simpleLight.direction;
 
                 // L(Luminance) : Radiance input
                 float3 Li = simpleLight.color;
 
                 // E(Illuminance) : To simulate the Irradiance in BRDF
-                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntencity;
+                float3 E = Li * saturate(dot(input.normalWS, lightWS)) * _LightIntencity * simpleLight.shadowAttenuation;
 
                 // Half Lambert
                 E = E * 0.5 + 0.5;

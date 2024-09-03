@@ -23,7 +23,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OldSchoolPro_Body_Mat
+  m_Name: OutlineCharacterBody
   m_Shader: {fileID: 4800000, guid: ba1003def786e6a4d85faa87d5a48864, type: 3}
   m_ShaderKeywords: _DIFFUSE_HALF_LAMBERT _SPECULAR_BLING_PHONE
   m_LightmapFlags: 4
