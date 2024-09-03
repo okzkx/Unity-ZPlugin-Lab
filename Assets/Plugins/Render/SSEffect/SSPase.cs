@@ -41,15 +41,22 @@ public abstract class SSPass<VolumeComp> : SSPass
     }
 
     public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) {
+        RenderingUtils.ReAllocateIfNeeded(
+            ref buffer,
+            CreateRenderTextureDescriptor(ref renderingData),
+            FilterMode.Bilinear,
+            TextureWrapMode.Clamp,
+            name: $"{name}_Texture"
+        );
+    }
+
+    public RenderTextureDescriptor CreateRenderTextureDescriptor(
+        ref RenderingData renderingData) {
         RenderTextureDescriptor cameraTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
         RenderTextureDescriptor descriptor = cameraTargetDescriptor;
         descriptor.msaaSamples = 1;
         descriptor.depthBufferBits = 0;
-
-        var m_AOPassDescriptor = descriptor;
-
-        RenderingUtils.ReAllocateIfNeeded(ref buffer, m_AOPassDescriptor, FilterMode.Bilinear, TextureWrapMode.Clamp,
-            name: $"{name}_Texture");
+        return descriptor;
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {

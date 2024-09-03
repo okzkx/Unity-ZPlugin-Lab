@@ -2,22 +2,28 @@
 using UnityEngine.Rendering.Universal;
 
 public class PostEffectPass : ScriptableRenderPass {
-    ShaderTagId PostEffect = new ShaderTagId("PostEffect");
+    const string name = "PostEffect";
+    ShaderTagId PostEffect = new ShaderTagId(name);
+    private ProfilingSampler Sampler = new ProfilingSampler(name);
 
     public PostEffectPass() {
         renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+        var cmd = CommandBufferPool.Get();
+        Sampler.Begin(cmd);
+        context.ExecuteCommandBuffer(cmd);
+        cmd.Clear();
+
         SortingCriteria sortingCriteria = SortingCriteria.CommonTransparent;
-        DrawingSettings drawingSettings = CreateDrawingSettings(PostEffect, ref renderingData, sortingCriteria);
+        DrawingSettings drawingSettings = CreateDrawingSettings(
+            PostEffect, ref renderingData, sortingCriteria);
+        var filteringSettings = new FilteringSettings(RenderQueueRange.all);
+        context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings);
 
-        // RenderQueueRange renderQueueRange = (renderQueueType == RenderQueueType.Transparent)
-        //     ? RenderQueueRange.transparent
-        //     : RenderQueueRange.opaque;
-        // m_FilteringSettings = new FilteringSettings(renderQueueRange, outlineLayer);
-        var m_FilteringSettings = new FilteringSettings(RenderQueueRange.all);
-
-        context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref m_FilteringSettings);
+        Sampler.End(cmd);
+        context.ExecuteCommandBuffer(cmd);
+        CommandBufferPool.Release(cmd);
     }
 }
