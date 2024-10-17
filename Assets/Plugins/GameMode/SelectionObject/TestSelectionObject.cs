@@ -12,7 +12,7 @@ public class TestSelectionObject : MonoBehaviour {
     private List<Material> sharedMaterials = new List<Material>();
 
     private void Awake() {
-        defaultRenderPipelineAsset = GraphicsSettings.renderPipelineAsset; 
+        defaultRenderPipelineAsset = GraphicsSettings.defaultRenderPipeline; 
         QualitySettings.renderPipeline = selectionRenderPipelineAsset;
     }
 
